@@ -13,20 +13,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const navigationItems = [
-  { icon: Home, label: "Dashboard", active: true },
-  { icon: BarChart3, label: "Analytics" },
-  { icon: Users, label: "Users" },
-  { icon: ShoppingCart, label: "Orders" },
-  { icon: TrendingUp, label: "Revenue" },
-  { icon: FileText, label: "Reports" },
-  { icon: Bell, label: "Notifications" },
-  { icon: Settings, label: "Settings" },
+  { icon: Home, label: "Dashboard", path: "/" },
+  { icon: BarChart3, label: "Analytics", path: "/analytics" },
+  { icon: Users, label: "Users", path: "/users" },
+  { icon: ShoppingCart, label: "Orders", path: "/orders" },
+  { icon: TrendingUp, label: "Revenue", path: "/revenue" },
+  { icon: FileText, label: "Reports", path: "/reports" },
+  { icon: Bell, label: "Notifications", path: "/notifications" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <div className={cn(
@@ -55,21 +58,25 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
-          {navigationItems.map((item, index) => (
-            <li key={index}>
-              <Button
-                variant={item.active ? "gradient" : "ghost"}
-                className={cn(
-                  "w-full justify-start h-11 transition-all duration-200",
-                  isCollapsed ? "px-2" : "px-4",
-                  item.active && "shadow-glow"
-                )}
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {!isCollapsed && <span className="ml-3">{item.label}</span>}
-              </Button>
-            </li>
-          ))}
+          {navigationItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <li key={index}>
+                <Button
+                  variant={isActive ? "gradient" : "ghost"}
+                  className={cn(
+                    "w-full justify-start h-11 transition-all duration-200",
+                    isCollapsed ? "px-2" : "px-4",
+                    isActive && "shadow-glow"
+                  )}
+                  onClick={() => navigate(item.path)}
+                >
+                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  {!isCollapsed && <span className="ml-3">{item.label}</span>}
+                </Button>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
