@@ -1,7 +1,8 @@
-import { Search, Bell, Settings, User, Moon, Sun } from "lucide-react";
+import { Search, Bell, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Header() {
   return (
@@ -28,9 +29,7 @@ export function Header() {
         </Button>
 
         {/* Theme toggle */}
-        <Button variant="ghost" size="icon">
-          <Sun className="h-5 w-5" />
-        </Button>
+        <ThemeToggle />
 
         {/* Settings */}
         <Button variant="ghost" size="icon">
