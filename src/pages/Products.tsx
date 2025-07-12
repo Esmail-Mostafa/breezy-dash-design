@@ -134,7 +134,12 @@ export default function Products() {
                 <Button variant="outline" size="sm" className="flex-1">
                   Edit
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => navigate(`/products/view/${product.id}`)}
+                >
                   View
                 </Button>
               </div>
