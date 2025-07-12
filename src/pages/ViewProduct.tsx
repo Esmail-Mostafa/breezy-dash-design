@@ -9,44 +9,47 @@ import { useToast } from "@/hooks/use-toast";
 
 // Mock product data - in a real app, this would come from an API
 const mockProduct = {
-  id: 1,
-  name: "Wireless Headphones",
-  category: "Electronics",
-  price: "$199.99",
-  originalPrice: "$249.99",
-  stock: 45,
-  status: "In Stock",
-  description: "Premium wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Perfect for music lovers and professionals who demand the best audio experience.",
-  brand: "AudioTech",
-  sku: "WH-001",
-  weight: "0.25",
+  _id: 1,
+  title: "Long sleeve Jacket",
+  isNew: true,
+  oldPrice: "200",
+  price: 150,
+  discountedPrice: 135,
+  description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla non magni facili blanditiis molestias soluta eveniet illum accusantium eius mollitia eligendi, ex iste doloribus magnam.",
+  category: "women",
+  type: "jacket",
+  stock: 50,
+  brand: "FashionTrend",
+  size: ["S", "M", "L"],
+  image: "https://images.pexels.com/photos/2584269/pexels-photo-2584269.jpeg",
+  rating: 4,
+  sku: "FT-WJ-001",
+  weight: "0.8",
   dimensions: {
-    length: "18",
-    width: "15",
-    height: "8"
+    length: "65",
+    width: "55",
+    height: "3"
   },
   minStock: 10,
-  supplier: "TechSupply Co.",
-  rating: 4.5,
-  reviews: 127,
-  images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+  supplier: "Fashion Distributors Ltd.",
+  reviews: 89,
   features: [
-    "Active Noise Cancellation",
-    "30-hour Battery Life",
-    "Bluetooth 5.0",
-    "Quick Charge (5 min = 2 hours)",
-    "Comfortable Over-ear Design",
-    "Built-in Microphone"
+    "Water-resistant fabric",
+    "Adjustable hood",
+    "Multiple pockets",
+    "Breathable lining",
+    "Machine washable",
+    "Available in multiple sizes"
   ],
   specifications: {
-    "Driver Size": "40mm",
-    "Frequency Response": "20Hz - 20kHz",
-    "Impedance": "32 Ohm",
-    "Sensitivity": "105 dB",
-    "Connectivity": "Bluetooth 5.0, 3.5mm Jack",
-    "Battery": "30 hours playback",
-    "Charging": "USB-C",
-    "Weight": "250g"
+    "Material": "60% Cotton, 40% Polyester",
+    "Care Instructions": "Machine wash cold, tumble dry low",
+    "Fit": "Regular fit",
+    "Closure": "Zipper front",
+    "Sleeve Type": "Long sleeve",
+    "Season": "Fall/Winter",
+    "Country of Origin": "Vietnam",
+    "Warranty": "1 year"
   }
 };
 
@@ -56,18 +59,21 @@ export default function ViewProduct() {
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedSize, setSelectedSize] = useState(mockProduct.size[0]);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "In Stock":
-        return <Badge variant="default" className="bg-green-100 text-green-800">In Stock</Badge>;
-      case "Low Stock":
-        return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Low Stock</Badge>;
-      case "Out of Stock":
-        return <Badge variant="destructive">Out of Stock</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+  const getStatusBadge = (stock: number) => {
+    if (stock > 20) {
+      return <Badge variant="default" className="bg-green-100 text-green-800">In Stock</Badge>;
+    } else if (stock > 0) {
+      return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Low Stock</Badge>;
+    } else {
+      return <Badge variant="destructive">Out of Stock</Badge>;
     }
+  };
+
+  const getDiscountPercentage = () => {
+    const discount = ((Number(mockProduct.oldPrice) - mockProduct.discountedPrice) / Number(mockProduct.oldPrice)) * 100;
+    return Math.round(discount);
   };
 
   const handleDelete = () => {
@@ -82,7 +88,7 @@ export default function ViewProduct() {
   const handleAddToCart = () => {
     toast({
       title: "Added to cart",
-      description: `${mockProduct.name} has been added to your cart.`,
+      description: `${mockProduct.title} has been added to your cart.`,
     });
   };
 
@@ -99,8 +105,13 @@ export default function ViewProduct() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">{mockProduct.name}</h1>
-            <p className="text-muted-foreground">SKU: {mockProduct.sku}</p>
+            <h1 className="text-3xl font-bold">{mockProduct.title}</h1>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-muted-foreground">SKU: {mockProduct.sku}</p>
+              {mockProduct.isNew && (
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800">New</Badge>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -124,19 +135,27 @@ export default function ViewProduct() {
         <div className="space-y-4">
           <Card>
             <CardContent className="p-6">
-              <div className="aspect-square bg-muted rounded-lg flex items-center justify-center mb-4">
-                <Package className="h-24 w-24 text-muted-foreground" />
+              <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-4">
+                <img 
+                  src={mockProduct.image} 
+                  alt={mockProduct.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="grid grid-cols-3 gap-2">
-                {mockProduct.images.map((_, index) => (
+                {[mockProduct.image, mockProduct.image, mockProduct.image].map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`aspect-square bg-muted rounded-lg flex items-center justify-center transition-all ${
+                    className={`aspect-square bg-muted rounded-lg overflow-hidden transition-all ${
                       selectedImage === index ? 'ring-2 ring-primary' : ''
                     }`}
                   >
-                    <Package className="h-8 w-8 text-muted-foreground" />
+                    <img 
+                      src={image} 
+                      alt={`${mockProduct.title} ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -149,13 +168,13 @@ export default function ViewProduct() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl">{mockProduct.name}</CardTitle>
-                {getStatusBadge(mockProduct.status)}
+                <CardTitle className="text-2xl">{mockProduct.title}</CardTitle>
+                {getStatusBadge(mockProduct.stock)}
               </div>
               <CardDescription className="flex items-center gap-4">
                 <span>{mockProduct.brand}</span>
                 <Separator orientation="vertical" className="h-4" />
-                <span>{mockProduct.category}</span>
+                <span className="capitalize">{mockProduct.category} - {mockProduct.type}</span>
                 <Separator orientation="vertical" className="h-4" />
                 <div className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-current text-yellow-500" />
@@ -166,9 +185,9 @@ export default function ViewProduct() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold">{mockProduct.price}</span>
-                <span className="text-xl text-muted-foreground line-through">{mockProduct.originalPrice}</span>
-                <Badge variant="secondary">20% OFF</Badge>
+                <span className="text-3xl font-bold">${mockProduct.discountedPrice}</span>
+                <span className="text-xl text-muted-foreground line-through">${mockProduct.oldPrice}</span>
+                <Badge variant="secondary">{getDiscountPercentage()}% OFF</Badge>
               </div>
 
               <p className="text-muted-foreground leading-relaxed">
@@ -178,6 +197,23 @@ export default function ViewProduct() {
               <div className="flex items-center gap-4 py-2">
                 <span className="font-semibold">Stock:</span>
                 <span>{mockProduct.stock} units available</span>
+              </div>
+
+              {/* Size Selection */}
+              <div className="space-y-2">
+                <span className="font-semibold">Size:</span>
+                <div className="flex gap-2">
+                  {mockProduct.size.map((size) => (
+                    <Button
+                      key={size}
+                      variant={selectedSize === size ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </Button>
+                  ))}
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
