@@ -8,7 +8,8 @@ import {
   FileText,
   Bell,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ const navigationItems = [
   { icon: Home, label: "Dashboard", path: "/" },
   { icon: BarChart3, label: "Analytics", path: "/analytics" },
   { icon: Users, label: "Users", path: "/users" },
+  { icon: Package, label: "Products", path: "/products" },
   { icon: ShoppingCart, label: "Orders", path: "/orders" },
   { icon: TrendingUp, label: "Revenue", path: "/revenue" },
   { icon: FileText, label: "Reports", path: "/reports" },
