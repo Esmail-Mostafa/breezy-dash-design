@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Analytics from "./pages/Analytics";
 import Users from "./pages/Users";
 import Products from "./pages/Products";
+import AddProduct from "./pages/AddProduct";
 import Orders from "./pages/Orders";
 import Revenue from "./pages/Revenue";
 import Reports from "./pages/Reports";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/users" element={<Users />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/products/add" element={<AddProduct />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/revenue" element={<Revenue />} />
             <Route path="/reports" element={<Reports />} />

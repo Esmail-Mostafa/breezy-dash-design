@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const products = [
   {
@@ -62,6 +63,8 @@ const products = [
 ];
 
 export default function Products() {
+  const navigate = useNavigate();
+  
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "In Stock":
@@ -82,7 +85,10 @@ export default function Products() {
           <h1 className="text-3xl font-bold">Products</h1>
           <p className="text-muted-foreground">Manage your product inventory</p>
         </div>
-        <Button className="flex items-center gap-2">
+        <Button 
+          className="flex items-center gap-2"
+          onClick={() => navigate("/products/add")}
+        >
           <Plus className="h-4 w-4" />
           Add Product
         </Button>
