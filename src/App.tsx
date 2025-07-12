@@ -4,18 +4,21 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
-import Index from "./pages/Index";
-import Analytics from "./pages/Analytics";
-import Users from "./pages/Users";
-import Products from "./pages/Products";
-import AddProduct from "./pages/AddProduct";
-import ViewProduct from "./pages/ViewProduct";
-import Orders from "./pages/Orders";
-import Revenue from "./pages/Revenue";
-import Reports from "./pages/Reports";
-import NotFound from "./pages/NotFound";
+import React from "react";
+import { lazy } from "react";
+import { GridLoader } from "react-spinners";
 
 const queryClient = new QueryClient();
+const Index = lazy(() => import("./pages/Index"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+const Users = lazy(() => import("./pages/Users"));
+const Products = lazy(() => import("./pages/Products"));
+const AddProduct = lazy(() => import("./pages/AddProduct"));
+const ViewProduct = lazy(() => import("./pages/ViewProduct"));
+const Orders = lazy(() => import("./pages/Orders"));
+const Revenue = lazy(() => import("./pages/Revenue"));
+const Reports = lazy(() => import("./pages/Reports"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => (
   <ThemeProvider defaultTheme="dark" storageKey="dashboard-ui-theme">
@@ -24,19 +27,21 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/add" element={<AddProduct />} />
-            <Route path="/products/view/:id" element={<ViewProduct />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/revenue" element={<Revenue />} />
-            <Route path="/reports" element={<Reports />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          {/* ✅ Suspense needed to show fallback while loading pages */}
+          <React.Suspense fallback={<GridLoader color="#000" />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/products/add" element={<AddProduct />} />
+              <Route path="/products/view/:id" element={<ViewProduct />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/revenue" element={<Revenue />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </React.Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
