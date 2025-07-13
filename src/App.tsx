@@ -20,6 +20,8 @@ const Revenue = lazy(() => import("./pages/Revenue"));
 const Reports = lazy(() => import("./pages/Reports"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AddUser = lazy(() => import("./pages/adduser"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const Cart = lazy(() => import("./pages/Cart"));
 
 const App = () => (
   <ThemeProvider defaultTheme="dark" storageKey="dashboard-ui-theme">
@@ -41,6 +43,8 @@ const App = () => (
               <Route path="/revenue" element={<Revenue />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/users/add" element={<AddUser />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </React.Suspense>
