@@ -1,6 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Download, Upload, Users, FileText, Settings } from "lucide-react";
+import {
+  Plus,
+  Download,
+  Upload,
+  Users,
+  FileText,
+  Settings,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const actions = [
   {
@@ -8,6 +16,7 @@ const actions = [
     description: "Create new user account",
     icon: Plus,
     variant: "gradient" as const,
+    href: "/users/add",
   },
   {
     title: "Export Data",
@@ -26,6 +35,13 @@ const actions = [
     description: "View team members",
     icon: Users,
     variant: "default" as const,
+  },
+  {
+    title: "Add Product",
+    description: "Create new product",
+    icon: Plus,
+    variant: "gradient" as const,
+    href: "/products/add",
   },
   {
     title: "Generate Report",
@@ -54,12 +70,17 @@ export function QuickActions() {
               key={index}
               variant={action.variant}
               className="h-auto p-4 flex flex-col items-start space-y-2 transition-all duration-200 hover:scale-105"
+              asChild
             >
-              <div className="flex items-center space-x-2 w-full">
-                <action.icon className="h-5 w-5" />
-                <span className="font-medium">{action.title}</span>
-              </div>
-              <p className="text-xs opacity-80 text-left">{action.description}</p>
+              <Link to={action.href} className="w-full h-full">
+                <div className="flex items-center space-x-2 w-full">
+                  <action.icon className="h-5 w-5" />
+                  <span className="font-medium">{action.title}</span>
+                </div>
+                <p className="text-xs opacity-80 text-left">
+                  {action.description}
+                </p>
+              </Link>
             </Button>
           ))}
         </div>

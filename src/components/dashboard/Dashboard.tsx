@@ -1,12 +1,11 @@
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { StatsCard } from "./StatsCard";
-import { ChartSection } from "./ChartSection";
 import { DataTable } from "./DataTable";
 import { QuickActions } from "./QuickActions";
 import { DollarSign, Users, ShoppingCart, TrendingUp } from "lucide-react";
 import { useStatsStatistic } from "@/hooks/use-status";
-import { CircleLoader, GridLoader } from "react-spinners";
+import {  GridLoader } from "react-spinners";
 import {
   getOrders,
   getProducts,
