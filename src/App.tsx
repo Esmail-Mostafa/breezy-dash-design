@@ -22,6 +22,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const AddUser = lazy(() => import("./pages/adduser"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Cart = lazy(() => import("./pages/Cart"));
+const Settings = lazy(() => import("./pages/Settings"));
 
 const App = () => (
   <ThemeProvider defaultTheme="dark" storageKey="dashboard-ui-theme">
@@ -45,6 +46,7 @@ const App = () => (
               <Route path="/users/add" element={<AddUser />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </React.Suspense>
