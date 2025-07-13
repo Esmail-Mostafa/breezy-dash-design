@@ -1,6 +1,6 @@
-export const getProducts = async () => {
+export const getProducts = async (page: number, perPage: number) => {
   const response = await fetch(
-    `https://fakestoreapiserver.reactbd.org/api/products?page=1&perPage=1`,
+    `https://fakestoreapiserver.reactbd.org/api/products?page=${page}&perPage=${perPage}`,
     { method: "GET" }
   );
 
@@ -10,6 +10,19 @@ export const getProducts = async () => {
 
   return data;
 };
+export const getProductById = async (id: number) => {
+  const response = await fetch(
+    `https://fakestoreapiserver.reactbd.org/api/products/${id}`,
+    { method: "GET" }
+  );
+
+  if (!response.ok) throw new Error("Failed to fetch products");
+
+  const data = await response.json();
+
+  return data;
+};
+
 export const getUsers = async () => {
   const response = await fetch(
     `https://fakestoreapiserver.reactbd.org/api/users?page=1&perPage=1`,

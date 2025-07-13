@@ -48,7 +48,7 @@ export function Dashboard() {
     queriesArray: [
       {
         queryKey: ["getProducts"],
-        queryFn: getProducts,
+        queryFn: () => getProducts(1,10),
       },
       {
         queryKey: ["getUsers"],

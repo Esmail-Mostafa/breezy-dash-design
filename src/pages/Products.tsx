@@ -1,9 +1,26 @@
 import { Package, Search, Filter, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { getProducts } from "@/services/products-service";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import React from "react";
+import CustomPagination from "@/components/custun-compoenets/custom-pagination";
 
 const products = [
   {
@@ -13,7 +30,7 @@ const products = [
     price: "$199.99",
     stock: 45,
     status: "In Stock",
-    image: "/placeholder.svg"
+    image: "/placeholder.svg",
   },
   {
     id: 2,
@@ -22,7 +39,7 @@ const products = [
     price: "$299.99",
     stock: 12,
     status: "Low Stock",
-    image: "/placeholder.svg"
+    image: "/placeholder.svg",
   },
   {
     id: 3,
@@ -31,7 +48,7 @@ const products = [
     price: "$129.99",
     stock: 0,
     status: "Out of Stock",
-    image: "/placeholder.svg"
+    image: "/placeholder.svg",
   },
   {
     id: 4,
@@ -40,7 +57,7 @@ const products = [
     price: "$89.99",
     stock: 23,
     status: "In Stock",
-    image: "/placeholder.svg"
+    image: "/placeholder.svg",
   },
   {
     id: 5,
@@ -49,7 +66,7 @@ const products = [
     price: "$49.99",
     stock: 67,
     status: "In Stock",
-    image: "/placeholder.svg"
+    image: "/placeholder.svg",
   },
   {
     id: 6,
@@ -58,25 +75,20 @@ const products = [
     price: "$39.99",
     stock: 8,
     status: "Low Stock",
-    image: "/placeholder.svg"
-  }
+    image: "/placeholder.svg",
+  },
 ];
 
 export default function Products() {
   const navigate = useNavigate();
-  
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "In Stock":
-        return <Badge variant="default" className="bg-green-100 text-green-800">In Stock</Badge>;
-      case "Low Stock":
-        return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Low Stock</Badge>;
-      case "Out of Stock":
-        return <Badge variant="destructive">Out of Stock</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
+
+  const [page, setPage] = React.useState(1);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["getProducts", page],
+    queryFn: () => getProducts(page, 10),
+  });
+  const totalPages = data?.totalPages || 1;
 
   return (
     <div className="p-6 space-y-6">
@@ -85,7 +97,7 @@ export default function Products() {
           <h1 className="text-3xl font-bold">Products</h1>
           <p className="text-muted-foreground">Manage your product inventory</p>
         </div>
-        <Button 
+        <Button
           className="flex items-center gap-2"
           onClick={() => navigate("/products/add")}
         >
@@ -106,8 +118,8 @@ export default function Products() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <Card key={product.id} className="hover:shadow-lg transition-shadow">
+        {data?.data.map((product) => (
+          <Card key={product._id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -115,7 +127,7 @@ export default function Products() {
                     <Package className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg">{product.name}</CardTitle>
+                    <CardTitle className="text-lg">{product.title}</CardTitle>
                     <CardDescription>{product.category}</CardDescription>
                   </div>
                 </div>
@@ -123,22 +135,22 @@ export default function Products() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold">{product.price}</span>
-                {getStatusBadge(product.status)}
+                <span className="text-2xl font-bold">${product.price}</span>
+                {/* {getStatusBadge(product.status)} */}
               </div>
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>Stock: {product.stock} units</span>
-                <span>ID: #{product.id}</span>
+                <span>ID: #{product._id}</span>
               </div>
               <div className="flex gap-2 pt-2">
                 <Button variant="outline" size="sm" className="flex-1">
                   Edit
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="flex-1"
-                  onClick={() => navigate(`/products/view/${product.id}`)}
+                  onClick={() => navigate(`/products/view/${product._id}`)}
                 >
                   View
                 </Button>
@@ -146,6 +158,13 @@ export default function Products() {
             </CardContent>
           </Card>
         ))}
+      </div>
+      <div>
+        <CustomPagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
