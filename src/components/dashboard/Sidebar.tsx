@@ -9,7 +9,9 @@ import {
   Bell,
   ChevronLeft,
   ChevronRight,
-  Package
+  Package,
+  Heart,
+  ShoppingBag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -22,6 +24,8 @@ const navigationItems = [
   { icon: Users, label: "Users", path: "/users" },
   { icon: Package, label: "Products", path: "/products" },
   { icon: ShoppingCart, label: "Orders", path: "/orders" },
+  { icon: Heart, label: "Favorites", path: "/favorites" },
+  { icon: ShoppingBag, label: "Cart", path: "/cart" },
   { icon: TrendingUp, label: "Revenue", path: "/revenue" },
   { icon: FileText, label: "Reports", path: "/reports" },
   { icon: Bell, label: "Notifications", path: "/notifications" },

@@ -1,10 +1,13 @@
-import { Search, Bell, Settings, User } from "lucide-react";
+import { Search, Bell, Settings, User, Heart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
+  const navigate = useNavigate();
+
   return (
     <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between animate-fade-in">
       {/* Search */}
@@ -20,6 +23,19 @@ export function Header() {
 
       {/* Right side actions */}
       <div className="flex items-center space-x-4">
+        {/* Favorites */}
+        <Button variant="ghost" size="icon" onClick={() => navigate("/favorites")}>
+          <Heart className="h-5 w-5" />
+        </Button>
+
+        {/* Cart */}
+        <Button variant="ghost" size="icon" className="relative" onClick={() => navigate("/cart")}>
+          <ShoppingBag className="h-5 w-5" />
+          <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-primary text-xs">
+            3
+          </Badge>
+        </Button>
+
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
