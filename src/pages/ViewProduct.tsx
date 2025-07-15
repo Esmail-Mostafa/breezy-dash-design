@@ -26,41 +26,38 @@ import { getProductById } from "@/services/products-service";
 import { IUser } from "@/interfaces/IUser";
 
 export default function ViewProduct() {
-  let mockProduct: IUser 
-
   const navigate = useNavigate();
   const { id } = useParams();
-  const [product, setProduct] = useState<IUser | null>(null);
   const { data, isSuccess } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(Number(id)),
   });
 
   if (isSuccess) {
-    setProduct(data) 
+    console.log(data);
   }
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedSize, setSelectedSize] = useState(data?.size[0]);
 
-  const getStatusBadge = (stock: number) => {
-    if (stock > 20) {
-      return (
-        <Badge variant="default" className="bg-green-100 text-green-800">
-          In Stock
-        </Badge>
-      );
-    } else if (stock > 0) {
-      return (
-        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-          Low Stock
-        </Badge>
-      );
-    } else {
-      return <Badge variant="destructive">Out of Stock</Badge>;
-    }
-  };
+  // const getStatusBadge = (stock: number) => {
+  //   if (stock > 20) {
+  //     return (
+  //       <Badge variant="default" className="bg-green-100 text-green-800">
+  //         In Stock
+  //       </Badge>
+  //     );
+  //   } else if (stock > 0) {
+  //     return (
+  //       <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+  //         Low Stock
+  //       </Badge>
+  //     );
+  //   } else {
+  //     return <Badge variant="destructive">Out of Stock</Badge>;
+  //   }
+  // };
 
   // const getDiscountPercentage = () => {
   //   const discount =
@@ -82,12 +79,13 @@ export default function ViewProduct() {
   const handleAddToCart = () => {
     toast({
       title: "Added to cart",
-      description: `${product?.title} has been added to your cart.`,
+      description: `${data?.title} has been added to your cart.`,
     });
   };
 
   return (
     <>
+    {isSuccess && (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -100,10 +98,10 @@ export default function ViewProduct() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>
-              <h1 className="text-3xl font-bold">{product?.title}</h1>
+              <h1 className="text-3xl font-bold">{data?.title}</h1>
               <div className="flex items-center gap-2 mt-1">
                 {/* <p className="text-muted-foreground">SKU: {mockProduct.sku}</p> */}
-                {product?.isNew && (
+                {data?.isNew && (
                   <Badge
                     variant="secondary"
                     className="bg-blue-100 text-blue-800"
@@ -141,31 +139,29 @@ export default function ViewProduct() {
               <CardContent className="p-6">
                 <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-4">
                   <img
-                    src={product?.image}
-                    alt={product?.title}
+                    src={data?.image}
+                    alt={data?.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  {[
-                    product?.image,
-                    product?.image,
-                    product?.image,
-                  ].map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`aspect-square bg-muted rounded-lg overflow-hidden transition-all ${
-                        selectedImage === index ? "ring-2 ring-primary" : ""
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`${product?.title} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
+                  {[data?.image, data?.image, data?.image].map(
+                    (image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`aspect-square bg-muted rounded-lg overflow-hidden transition-all ${
+                          selectedImage === index ? "ring-2 ring-primary" : ""
+                        }`}
+                      >
+                        <img
+                          src={image}
+                          alt={`${data?.title} ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -176,34 +172,32 @@ export default function ViewProduct() {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-2xl">
-                    {product?.title}
-                  </CardTitle>
-                  {getStatusBadge(product?.stock)}
+                  <CardTitle className="text-2xl">{data?.title}</CardTitle>
+                  {/* {getStatusBadge(product?.stock)} */}
                 </div>
-                <CardDescription className="flex items-center gap-4">
-                  <span>{product?.brand}</span>
+                <CardContent className="flex items-center gap-4">
+                  <span>{data?.brand}</span>
                   <Separator orientation="vertical" className="h-4" />
                   <span className="capitalize">
-                    {product?.category} - {product?.type}
+                    {data?.category} - {data?.type}
                   </span>
                   <Separator orientation="vertical" className="h-4" />
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-current text-yellow-500" />
-                    <span>{product?.rating}</span>
+                    <span>{data?.rating}</span>
                     {/* <span className="text-muted-foreground">
                       ({mockProduct.reviews} reviews)
                     </span> */}
                   </div>
-                </CardDescription>
+                </CardContent>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl font-bold">
-                    ${product?.discountedPrice}
+                    ${data?.discountedPrice}
                   </span>
                   <span className="text-xl text-muted-foreground line-through">
-                    ${product?.oldPrice}
+                    ${data?.oldPrice}
                   </span>
                   {/* <Badge variant="secondary">
                     {getDiscountPercentage()}% OFF
@@ -211,19 +205,19 @@ export default function ViewProduct() {
                 </div>
 
                 <p className="text-muted-foreground leading-relaxed">
-                  {product?.description}
+                  {data?.description}
                 </p>
 
                 <div className="flex items-center gap-4 py-2">
                   <span className="font-semibold">Stock:</span>
-                  <span>{product?.stock} units available</span>
+                  <span>{data?.stock} units available</span>
                 </div>
 
                 {/* Size Selection */}
                 <div className="space-y-2">
                   <span className="font-semibold">Size:</span>
                   <div className="flex gap-2">
-                    {product?.size.map((size) => (
+                    {data?.size.map((size) => (
                       <Button
                         key={size}
                         variant={selectedSize === size ? "default" : "outline"}
@@ -313,7 +307,7 @@ export default function ViewProduct() {
                     Current Stock
                   </label>
                   <p className="text-lg font-semibold">
-                    {product?.stock} units
+                    {data?.stock} units
                   </p>
                 </div>
                 <div>
@@ -358,6 +352,7 @@ export default function ViewProduct() {
           </Card>
         </div>
       </div>
+    )}
     </>
   );
 }
