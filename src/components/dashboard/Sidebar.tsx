@@ -11,7 +11,9 @@ import {
   ChevronRight,
   Package,
   Heart,
-  ShoppingBag
+  ShoppingBag,
+  LogIn,
+  UserPlus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,6 +32,8 @@ const navigationItems = [
   { icon: FileText, label: "Reports", path: "/reports" },
   { icon: Bell, label: "Notifications", path: "/notifications" },
   { icon: Settings, label: "Settings", path: "/settings" },
+  { icon: LogIn, label: "Login", path: "/login" },
+  { icon: UserPlus, label: "Register", path: "/register" },
 ];
 
 export function Sidebar() {
