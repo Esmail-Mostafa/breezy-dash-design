@@ -8,7 +8,24 @@ export const getProducts = async (page: number, perPage: number) => {
 
   const data = await response.json();
 
-  return data;
+  let editData = localStorage.getItem("editProduct");
+  const parsededitProduct = JSON.parse(editData);
+  let addData = localStorage.getItem("addProduct");
+  const parsedaddProduct = JSON.parse(addData);
+
+  for (let i = 0; i < data?.data.length; i++) {
+    if (data.data[i]._id == parsededitProduct[i]?._id) {
+      data.data[i] = parsededitProduct[i];
+    }
+  }
+  let finlData = {
+    ...data,
+    data: [...data.data, ...parsedaddProduct],
+    totalProducts: data.totalProducts + parsedaddProduct.length,
+    perPage: data.perPage,
+  };
+
+  return finlData;
 };
 export const getProductById = async (id: number) => {
   const response = await fetch(
@@ -18,7 +35,16 @@ export const getProductById = async (id: number) => {
 
   if (!response.ok) throw new Error("Failed to fetch products");
 
-  const data = await response.json();
+  let data = await response.json();
+
+  let editData = localStorage.getItem("editProduct");
+  const parsededitProduct = JSON.parse(editData);
+
+  for (let i = 0; i < parsededitProduct.length; i++) {
+    if (data._id == parsededitProduct[i]?._id) {
+      data = parsededitProduct[i];
+    }
+  }
 
   return data;
 };

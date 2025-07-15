@@ -17,6 +17,8 @@ import { useToast } from "@/hooks/use-toast";
 import { getProductById } from "@/services/products-service";
 import { useQuery } from "@tanstack/react-query";
 import { Formik, Field, Form } from "formik";
+import MultiSelectField from "@/components/custun-compoenets/MultiSelectField";
+import { addProduct, editProduct } from "@/services/loccalstorgeControl";
 const categories = [
   "Electronics",
   "Fashion",
@@ -45,32 +47,30 @@ export default function AddProduct() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { id } = useParams();
-  const {
-    data: product,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useQuery({
+  const { data: product } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(Number(id)),
     enabled: !!id,
   });
-  if (isSuccess) {
-    console.log(product);
-  }
+  let editOrAdd = id ? "Edit" : "Add";
 
-  const handleSubmit = () => {
-    // e.preventDefault();
-    // setIsSubmitting(true);
-    // // Simulate form submission
-    // setTimeout(() => {
-    //   toast({
-    //     title: "Product added successfully!",
-    //     description: "Your new product has been added to the inventory.",
-    //   });
-    //   setIsSubmitting(false);
-    //   navigate("/products");
-    // }, 1500);
+  const handleSubmit = (values: any) => {
+    setIsSubmitting(true);
+    if (editOrAdd === "Edit") {
+      editProduct(values);
+    } else {
+      addProduct(values);
+    }
+
+    // Simulate form submission
+    setTimeout(() => {
+      toast({
+        title: "Product added successfully!",
+        description: "Your new product has been added to the inventory.",
+      });
+      setIsSubmitting(false);
+      navigate("/products");
+    }, 1500);
   };
 
   return (
@@ -93,21 +93,23 @@ export default function AddProduct() {
       <Formik
         enableReinitialize
         initialValues={{
-          name: product?.title || "",
+          _id: product?._id || "",
+          title: product?.title || "",
           category: product?.category || "",
           description: product?.description || "",
           price: product?.price || "",
           stock: product?.stock || "",
-          sku: product?.sku || "",
           brand: product?.brand || "",
-          weight: product?.weight || "",
-          length: product?.length || "",
-          width: product?.width || "",
-          height: product?.height || "",
           minStock: product?.minStock || "",
-          supplier: product?.supplier || "",
+          isNew: product?.isNew || "",
+          oldPrice: product?.oldPrice || "",
+          discountedPrice: product?.discountedPrice || "",
+          rating: product?.rating || "",
+          size: product?.size || [],
+          image: product?.image || "",
+          type: product?.type || "",
         }}
-        onSubmit={handleSubmit}
+        onSubmit={(values) => handleSubmit(values)}
       >
         <Form className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
@@ -121,11 +123,11 @@ export default function AddProduct() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Product Name</Label>
+                    <Label htmlFor="title">Product title</Label>
                     <Field
-                      id="name"
-                      name="name"
-                      placeholder="Enter product name"
+                      id="title"
+                      name="title"
+                      placeholder="Enter product title"
                       required
                       className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     />
@@ -143,6 +145,9 @@ export default function AddProduct() {
                       className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <option value="">Select category</option>
+                      <option value={product?.category}>
+                        {product?.category}
+                      </option>
                       {categories.map((category) => (
                         <option key={category} value={category}>
                           {category}
@@ -178,6 +183,32 @@ export default function AddProduct() {
                     />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="oldPrice">Old Price ($)</Label>
+                    <Field
+                      name="oldPrice"
+                      id="oldPrice"
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      required
+                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="discountedPrice">
+                      Discounted Price ($)
+                    </Label>
+                    <Field
+                      name="discountedPrice"
+                      id="discountedPrice"
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      required
+                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="stock">Stock Quantity</Label>
                     <Field
                       name="stock"
@@ -185,15 +216,6 @@ export default function AddProduct() {
                       type="number"
                       placeholder="0"
                       required
-                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="sku">SKU (Optional)</Label>
-                    <Field
-                      name="sku"
-                      id="sku"
-                      placeholder="SKU-001"
                       className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
@@ -220,48 +242,28 @@ export default function AddProduct() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="weight">Weight (kg)</Label>
+                    <Label htmlFor="type">Type</Label>
                     <Field
-                      name="weight"
-                      id="weight"
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
+                      name="type"
+                      id="type"
+                      placeholder="Enter type name"
                       className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="length">Length (cm)</Label>
-                    <Field
-                      name="length"
-                      id="length"
-                      type="number"
-                      placeholder="0"
-                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="width">Width (cm)</Label>
-                    <Field
-                      name="width"
-                      id="width"
-                      type="number"
-                      placeholder="0"
-                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="height">Height (cm)</Label>
-                    <Field
-                      name="height"
-                      id="height"
-                      type="number"
-                      placeholder="0"
-                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    />
+                  <Label htmlFor="size">Size</Label>
+                  <div className=" flex flex-row gap-2">
+                    <label className="flex items-center gap-2">
+                      <Field type="checkbox" name="size" value="S" />S
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <Field type="checkbox" name="size" value="M" />M
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <Field type="checkbox" name="size" value="L" />L
+                    </label>
                   </div>
                 </div>
               </CardContent>
@@ -282,13 +284,17 @@ export default function AddProduct() {
                     <Package className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Drag and drop an image here, or click to browse
-                    </p>
-                    <Button variant="outline" size="sm">
-                      <Upload className="h-4 w-4 mr-2" />
-                      Choose File
-                    </Button>
+                    <img
+                      src={product?.image}
+                      alt=""
+                      className="w-40 h-40 text-center"
+                    />
+                    <Field
+                      name="image"
+                      id="image"
+                      type="text"
+                      className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    />
                   </div>
                   <p className="text-xs text-muted-foreground">
                     PNG, JPG, GIF up to 10MB
@@ -297,37 +303,11 @@ export default function AddProduct() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Inventory Settings</CardTitle>
-                <CardDescription>Configure stock management</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="minStock">Minimum Stock Alert</Label>
-                  <Field
-                    name="minStock"
-                    id="minStock"
-                    type="number"
-                    placeholder="10"
-                    className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="supplier">Supplier</Label>
-                  <Field
-                    name="supplier"
-                    id="supplier"
-                    placeholder="Supplier name"
-                    className="mt-1 p-2 block w-full rounded-md border border-input bg-background text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
             <div className="space-y-3">
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Adding Product..." : "Add Product"}
+                {isSubmitting
+                  ? `${editOrAdd}ing Product...`
+                  : `${editOrAdd} Product`}
               </Button>
               <Button
                 type="button"
