@@ -1,4 +1,12 @@
-import { Search, Bell, Settings, User, Heart, ShoppingBag } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Settings,
+  User,
+  Heart,
+  ShoppingBag,
+  LogOutIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +15,10 @@ import { useNavigate } from "react-router-dom";
 
 export function Header() {
   const navigate = useNavigate();
-
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    navigate("/login", { replace: true });
+  };
   return (
     <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between animate-fade-in">
       {/* Search */}
@@ -24,12 +35,21 @@ export function Header() {
       {/* Right side actions */}
       <div className="flex items-center space-x-4">
         {/* Favorites */}
-        <Button variant="ghost" size="icon" onClick={() => navigate("/favorites")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/favorites")}
+        >
           <Heart className="h-5 w-5" />
         </Button>
 
         {/* Cart */}
-        <Button variant="ghost" size="icon" className="relative" onClick={() => navigate("/cart")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          onClick={() => navigate("/cart")}
+        >
           <ShoppingBag className="h-5 w-5" />
           <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-primary text-xs">
             3
@@ -58,6 +78,9 @@ export function Header() {
             <User className="h-4 w-4" />
           </div>
           <span className="hidden md:block">John Doe</span>
+        </Button>
+        <Button variant="ghost" size="icon" onClick={handleLogout}>
+          <LogOutIcon className="h-5 w-5" />
         </Button>
       </div>
     </header>

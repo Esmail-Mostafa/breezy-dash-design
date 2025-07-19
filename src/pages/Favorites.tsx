@@ -4,72 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, ShoppingCart, Star, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-// Mock favorite products data
-const mockFavorites = [
-  {
-    _id: 1,
-    title: "Long sleeve Jacket",
-    isNew: true,
-    oldPrice: "200",
-    price: 150,
-    discountedPrice: 135,
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-    category: "women",
-    type: "jacket",
-    stock: 50,
-    brand: "FashionTrend",
-    size: ["S", "M", "L"],
-    image: "https://images.pexels.com/photos/2584269/pexels-photo-2584269.jpeg",
-    rating: 4
-  },
-  {
-    _id: 2,
-    title: "Summer Dress",
-    isNew: false,
-    oldPrice: "120",
-    price: 90,
-    discountedPrice: 75,
-    description: "Perfect for summer occasions and casual wear.",
-    category: "women",
-    type: "dress",
-    stock: 30,
-    brand: "SummerVibes",
-    size: ["XS", "S", "M", "L", "XL"],
-    image: "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg",
-    rating: 5
-  },
-  {
-    _id: 3,
-    title: "Classic Sneakers",
-    isNew: true,
-    oldPrice: "80",
-    price: 65,
-    discountedPrice: 55,
-    description: "Comfortable and stylish sneakers for everyday wear.",
-    category: "shoes",
-    type: "sneakers",
-    stock: 75,
-    brand: "SportStyle",
-    size: ["7", "8", "9", "10", "11"],
-    image: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg",
-    rating: 4
-  }
-];
+import { useNavigate } from "react-router-dom";
 
 export default function Favorites() {
-  const [favorites, setFavorites] = useState(mockFavorites);
+  const navigate = useNavigate(); 
+
+  const mockFavorites = localStorage.getItem("favorites");
+  const mockCart = localStorage.getItem("cart");
+  const [favorites, setFavorites] = useState(
+    mockFavorites ? JSON.parse(mockFavorites) : []
+  );
+  const [cart, setCart] = useState(mockCart ? JSON.parse(mockCart) : []);
   const { toast } = useToast();
 
   const removeFromFavorites = (id: number) => {
-    setFavorites(favorites.filter(item => item._id !== id));
+    setFavorites(favorites.filter((item) => item._id !== id));
     toast({
       title: "Removed from favorites",
       description: "Item has been removed from your favorites list.",
     });
   };
 
-  const addToCart = (product: typeof mockFavorites[0]) => {
+  const addToCart = (product: any) => {
+    let lastest = cart.push(product);
+    setCart(lastest);
+    localStorage.setItem("cart", JSON.stringify(cart));
+   let latestFavorites =  favorites.filter((item: any) => item._id !== product._id);
+    setFavorites(latestFavorites);
+    localStorage.setItem("favorites", JSON.stringify(latestFavorites));
+
+
+
     toast({
       title: "Added to cart",
       description: `${product.title} has been added to your cart.`,
@@ -81,9 +46,7 @@ export default function Favorites() {
       <Star
         key={i}
         className={`h-4 w-4 ${
-          i < rating
-            ? "fill-warning text-warning"
-            : "text-muted-foreground"
+          i < rating ? "fill-warning text-warning" : "text-muted-foreground"
         }`}
       />
     ));
@@ -98,7 +61,8 @@ export default function Favorites() {
             <h1 className="text-3xl font-bold text-foreground">My Favorites</h1>
           </div>
           <p className="text-muted-foreground">
-            {favorites.length} item{favorites.length !== 1 ? 's' : ''} in your favorites list
+            {favorites.length} item{favorites.length !== 1 ? "s" : ""} in your
+            favorites list
           </p>
         </div>
 
@@ -110,9 +74,10 @@ export default function Favorites() {
                 No favorites yet
               </h3>
               <p className="text-muted-foreground text-center max-w-md">
-                Start browsing and add items to your favorites list to keep track of products you love.
+                Start browsing and add items to your favorites list to keep
+                track of products you love.
               </p>
-              <Button className="mt-6" variant="default">
+              <Button className="mt-6" variant="default" onClick={() => navigate("/products")}>
                 Browse Products
               </Button>
             </CardContent>
@@ -120,7 +85,10 @@ export default function Favorites() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {favorites.map((product) => (
-              <Card key={product._id} className="bg-card border-border hover:shadow-card transition-all duration-300 group">
+              <Card
+                key={product._id}
+                className="bg-card border-border hover:shadow-card transition-all duration-300 group"
+              >
                 <CardHeader className="p-0">
                   <div className="relative overflow-hidden rounded-t-lg">
                     <img
@@ -130,12 +98,24 @@ export default function Favorites() {
                     />
                     <div className="absolute top-3 left-3 flex gap-2">
                       {product.isNew && (
-                        <Badge variant="default" className="bg-primary text-primary-foreground">
+                        <Badge
+                          variant="default"
+                          className="bg-primary text-primary-foreground"
+                        >
                           New
                         </Badge>
                       )}
-                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                        {Math.round(((parseFloat(product.oldPrice) - product.discountedPrice) / parseFloat(product.oldPrice)) * 100)}% OFF
+                      <Badge
+                        variant="secondary"
+                        className="bg-secondary text-secondary-foreground"
+                      >
+                        {Math.round(
+                          ((parseFloat(product.oldPrice) -
+                            product.discountedPrice) /
+                            parseFloat(product.oldPrice)) *
+                            100
+                        )}
+                        % OFF
                       </Badge>
                     </div>
                     <Button
@@ -148,7 +128,7 @@ export default function Favorites() {
                     </Button>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent className="p-4">
                   <div className="space-y-3">
                     <div>
@@ -181,8 +161,12 @@ export default function Favorites() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Stock:</span>
-                      <Badge variant={product.stock > 10 ? "default" : "destructive"}>
+                      <span className="text-sm text-muted-foreground">
+                        Stock:
+                      </span>
+                      <Badge
+                        variant={product.stock > 10 ? "default" : "destructive"}
+                      >
                         {product.stock} left
                       </Badge>
                     </div>

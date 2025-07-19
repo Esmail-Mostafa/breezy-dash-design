@@ -1,6 +1,9 @@
+
+let BASE_URL = "https://fakestoreapiserver.reactbd.org/api";
+
 export const getProducts = async (page: number, perPage: number) => {
   const response = await fetch(
-    `https://fakestoreapiserver.reactbd.org/api/products?page=${page}&perPage=${perPage}`,
+    `${BASE_URL}/products?page=${page}&perPage=${perPage}`,
     { method: "GET" }
   );
 
@@ -8,10 +11,10 @@ export const getProducts = async (page: number, perPage: number) => {
 
   const data = await response.json();
 
-  let editData = localStorage.getItem("editProduct");
-  const parsededitProduct = JSON.parse(editData);
-  let addData = localStorage.getItem("addProduct");
-  const parsedaddProduct = JSON.parse(addData);
+  const editData = localStorage.getItem("editProduct");
+  const parsededitProduct = editData ? JSON.parse(editData) : [];
+  const addData = localStorage.getItem("addProduct");
+  const parsedaddProduct = addData ? JSON.parse(addData) : [];
 
   for (let i = 0; i < data?.data.length; i++) {
     if (data.data[i]._id == parsededitProduct[i]?._id) {
@@ -28,17 +31,14 @@ export const getProducts = async (page: number, perPage: number) => {
   return finlData;
 };
 export const getProductById = async (id: number) => {
-  const response = await fetch(
-    `https://fakestoreapiserver.reactbd.org/api/products/${id}`,
-    { method: "GET" }
-  );
+  const response = await fetch(`${BASE_URL}/products/${id}`, { method: "GET" });
 
   if (!response.ok) throw new Error("Failed to fetch products");
 
   let data = await response.json();
 
   let editData = localStorage.getItem("editProduct");
-  const parsededitProduct = JSON.parse(editData);
+  const parsededitProduct = editData ? JSON.parse(editData) : [];
 
   for (let i = 0; i < parsededitProduct.length; i++) {
     if (data._id == parsededitProduct[i]?._id) {
@@ -50,10 +50,9 @@ export const getProductById = async (id: number) => {
 };
 
 export const getUsers = async () => {
-  const response = await fetch(
-    `https://fakestoreapiserver.reactbd.org/api/users?page=1&perPage=1`,
-    { method: "GET" }
-  );
+  const response = await fetch(`${BASE_URL}/users?page=1&perPage=1`, {
+    method: "GET",
+  });
 
   if (!response.ok) throw new Error("Failed to fetch products");
 
@@ -63,10 +62,9 @@ export const getUsers = async () => {
 };
 
 export const getOrders = async () => {
-  const response = await fetch(
-    `https://fakestoreapiserver.reactbd.org/api/orders?page=1&perPage=1`,
-    { method: "GET" }
-  );
+  const response = await fetch(`${BASE_URL}/orders?page=1&perPage=1`, {
+    method: "GET",
+  });
 
   if (!response.ok) throw new Error("Failed to fetch products");
 
@@ -75,10 +73,9 @@ export const getOrders = async () => {
   return data;
 };
 export const getReviews = async () => {
-  const response = await fetch(
-    `https://fakestoreapiserver.reactbd.org/api/reviews?page=1&perPage=1`,
-    { method: "GET" }
-  );
+  const response = await fetch(`${BASE_URL}/reviews?page=1&perPage=1`, {
+    method: "GET",
+  });
 
   if (!response.ok) throw new Error("Failed to fetch products");
 

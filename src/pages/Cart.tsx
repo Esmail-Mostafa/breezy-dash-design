@@ -4,48 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { ShoppingCart, Plus, Minus, Trash2, Heart, CreditCard } from "lucide-react";
+import {
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  Heart,
+  CreditCard,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock cart data
-const mockCartItems = [
-  {
-    _id: 1,
-    title: "Long sleeve Jacket",
-    price: 150,
-    discountedPrice: 135,
-    brand: "FashionTrend",
-    size: "M",
-    image: "https://images.pexels.com/photos/2584269/pexels-photo-2584269.jpeg",
-    quantity: 2,
-    stock: 50
-  },
-  {
-    _id: 2,
-    title: "Summer Dress",
-    price: 90,
-    discountedPrice: 75,
-    brand: "SummerVibes",
-    size: "L",
-    image: "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg",
-    quantity: 1,
-    stock: 30
-  },
-  {
-    _id: 3,
-    title: "Classic Sneakers",
-    price: 65,
-    discountedPrice: 55,
-    brand: "SportStyle",
-    size: "9",
-    image: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg",
-    quantity: 1,
-    stock: 75
-  }
-];
-
 export default function Cart() {
-  const [cartItems, setCartItems] = useState(mockCartItems);
+  const mockCartItems = localStorage.getItem("cart");
+  const [cartItems, setCartItems] = useState(
+    mockCartItems ? JSON.parse(mockCartItems) : []
+  );
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const { toast } = useToast();
@@ -55,26 +28,43 @@ export default function Cart() {
       removeFromCart(id);
       return;
     }
-    
-    setCartItems(cartItems.map(item => 
+
+    const updatedCart = cartItems.map((item) =>
       item._id === id ? { ...item, quantity: newQuantity } : item
-    ));
+    );
+
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const removeFromCart = (id: number) => {
-    setCartItems(cartItems.filter(item => item._id !== id));
+    const updatedCart = cartItems.filter((item) => item._id !== id);
+
+    setCartItems(updatedCart);
     toast({
       title: "Item removed",
       description: "Item has been removed from your cart.",
     });
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const moveToFavorites = (id: number) => {
-    removeFromCart(id);
+    const updatedCart = cartItems.filter((item) => {
+      if (item._id === id) {
+        localStorage.setItem("favorites", JSON.stringify(item));
+      } else {
+        return item;
+      }
+    });
+
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
     toast({
       title: "Moved to favorites",
       description: "Item has been moved to your favorites list.",
     });
+    localStorage.setItem("favorites", JSON.stringify(updatedCart));
   };
 
   const applyPromoCode = () => {
@@ -93,7 +83,10 @@ export default function Cart() {
     }
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.discountedPrice * item.quantity), 0);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.discountedPrice * item.quantity,
+    0
+  );
   const promoDiscount = (subtotal * discount) / 100;
   const shipping = subtotal > 100 ? 0 : 9.99;
   const tax = (subtotal - promoDiscount) * 0.08;
@@ -105,10 +98,13 @@ export default function Cart() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <ShoppingCart className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">Shopping Cart</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              Shopping Cart
+            </h1>
           </div>
           <p className="text-muted-foreground">
-            {cartItems.length} item{cartItems.length !== 1 ? 's' : ''} in your cart
+            {cartItems.length} item{cartItems.length !== 1 ? "s" : ""} in your
+            cart
           </p>
         </div>
 
@@ -120,7 +116,8 @@ export default function Cart() {
                 Your cart is empty
               </h3>
               <p className="text-muted-foreground text-center max-w-md">
-                Start shopping and add items to your cart to continue with your purchase.
+                Start shopping and add items to your cart to continue with your
+                purchase.
               </p>
               <Button className="mt-6" variant="default">
                 Continue Shopping
@@ -144,43 +141,58 @@ export default function Cart() {
                           alt={item.title}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
-                        
+
                         <div className="flex-1 space-y-2">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="font-semibold text-foreground">{item.title}</h3>
+                              <h3 className="font-semibold text-foreground">
+                                {item.title}
+                              </h3>
                               <p className="text-sm text-muted-foreground">
-                                {item.brand} • Size: {item.size}
+                                {item.brand} • Size: {item.size[0]}{" "}
+                                {item.size[1]} {item.size[2]} {item.size[3]}{" "}
+                                {item.size[4]} {item.size[5]} {item.size[6]}{" "}
+                                {item.size[7]} {item.size[8]} {item.size[9]}
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-semibold text-foreground">${item.discountedPrice}</p>
-                              <p className="text-sm text-muted-foreground line-through">${item.price}</p>
+                              <p className="font-semibold text-foreground">
+                                ${item.discountedPrice}
+                              </p>
+                              <p className="text-sm text-muted-foreground line-through">
+                                ${item.price}
+                              </p>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Button
                                 variant="outline"
                                 size="icon"
                                 className="h-8 w-8"
-                                onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                                onClick={() =>
+                                  updateQuantity(item._id, item.quantity - 1)
+                                }
                               >
                                 <Minus className="h-4 w-4" />
                               </Button>
-                              <span className="w-8 text-center font-medium">{item.quantity}</span>
+                              <span className="w-8 text-center font-medium">
+                                {item.quantity}
+                              </span>
                               <Button
                                 variant="outline"
                                 size="icon"
                                 className="h-8 w-8"
-                                onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                onClick={() =>
+                                  updateQuantity(item._id, item.quantity + 1)
+                                }
                                 disabled={item.quantity >= item.stock}
                               >
                                 <Plus className="h-4 w-4" />
                               </Button>
                             </div>
-                            
+
                             <div className="flex gap-2">
                               <Button
                                 variant="ghost"
@@ -198,16 +210,21 @@ export default function Cart() {
                               </Button>
                             </div>
                           </div>
-                          
+
                           <div className="text-right">
                             <p className="font-semibold text-foreground">
-                              Subtotal: ${(item.discountedPrice * item.quantity).toFixed(2)}
+                              Subtotal: $
+                              {(item.discountedPrice * item.quantity).toFixed(
+                                2
+                              )}
                             </p>
                           </div>
                         </div>
                       </div>
-                      
-                      {index < cartItems.length - 1 && <Separator className="mt-4" />}
+
+                      {index < cartItems.length - 1 && (
+                        <Separator className="mt-4" />
+                      )}
                     </div>
                   ))}
                 </CardContent>
@@ -218,7 +235,9 @@ export default function Cart() {
             <div>
               <Card className="bg-card border-border sticky top-6">
                 <CardHeader>
-                  <CardTitle className="text-foreground">Order Summary</CardTitle>
+                  <CardTitle className="text-foreground">
+                    Order Summary
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Promo Code */}
@@ -252,19 +271,22 @@ export default function Cart() {
                       <span>Subtotal:</span>
                       <span>${subtotal.toFixed(2)}</span>
                     </div>
-                    
+
                     {discount > 0 && (
                       <div className="flex justify-between text-success">
                         <span>Promo Discount ({discount}%):</span>
                         <span>-${promoDiscount.toFixed(2)}</span>
                       </div>
                     )}
-                    
+
                     <div className="flex justify-between text-foreground">
                       <span>Shipping:</span>
                       <span>
                         {shipping === 0 ? (
-                          <Badge variant="default" className="bg-success text-success">
+                          <Badge
+                            variant="default"
+                            className="bg-success text-success"
+                          >
                             Free
                           </Badge>
                         ) : (
@@ -272,7 +294,7 @@ export default function Cart() {
                         )}
                       </span>
                     </div>
-                    
+
                     <div className="flex justify-between text-foreground">
                       <span>Tax:</span>
                       <span>${tax.toFixed(2)}</span>
