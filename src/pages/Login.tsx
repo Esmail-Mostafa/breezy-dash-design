@@ -60,13 +60,17 @@ const Login = () => {
                   </Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-                    <Field
-                      name="username"
-                      id="username"
-                      type="text"
-                      placeholder="Enter your username"
-                      className="pl-10 pr-12 w-full rounded-lg h-12 border-2 focus:border-primary/50 transition-all duration-200 hover:border-primary/30"
-                    />
+                    <Field name="username">
+                      {({ field }: any) => (
+                        <Input
+                          {...field}
+                          id="username"
+                          type="text"
+                          placeholder="Enter your username"
+                          className="pl-10 pr-12 w-full rounded-lg h-12 border-2 focus:border-primary/50 transition-all duration-200 hover:border-primary/30"
+                        />
+                      )}
+                    </Field>
                   </div>
                 </div>
 
@@ -76,13 +80,17 @@ const Login = () => {
                   </Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-                    <Field
-                      name="password"
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      className="pl-10 pr-12 w-full rounded-lg h-12 border-2 focus:border-primary/50 transition-all duration-200 hover:border-primary/30"
-                    />
+                    <Field name="password">
+                      {({ field }: any) => (
+                        <Input
+                          {...field}
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
+                          className="pl-10 pr-12 w-full rounded-lg h-12 border-2 focus:border-primary/50 transition-all duration-200 hover:border-primary/30"
+                        />
+                      )}
+                    </Field>
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
