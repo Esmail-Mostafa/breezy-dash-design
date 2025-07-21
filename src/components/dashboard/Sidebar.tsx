@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const navigationItems = [
@@ -36,7 +36,7 @@ const navigationItems = [
   { icon: UserPlus, label: "Register", path: "/register" },
 ];
 
-export function Sidebar() {
+export const Sidebar = React.memo(function Sidebar({name}: {name: string}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -108,5 +108,5 @@ export function Sidebar() {
         </div>
       </div>
     </div>
-  );
-}
+  ) ;
+})

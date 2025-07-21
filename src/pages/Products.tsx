@@ -29,7 +29,7 @@ export default function Products() {
     <>
       <div className="p-6 space-y-6 flex gap-4">
         <div>
-          <Sidebar />
+          <Sidebar name="0" />
         </div>
         <div className="w-full">
           <div className="flex items-center justify-between">
