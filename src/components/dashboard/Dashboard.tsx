@@ -81,7 +81,7 @@ export function Dashboard() {
       ) : (
         <div className="flex">
           {/* Sidebar */}
-          <Sidebar />
+          <Sidebar name="Dashboard" />
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col">
