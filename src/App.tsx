@@ -38,19 +38,19 @@ const App = () => (
           <React.Suspense fallback={<GridLoader color="#000" />}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/analytics" element={<AuthGuard><Analytics /></AuthGuard>} />
-              <Route path="/users" element={<AuthGuard><Users /></AuthGuard>} />
-              <Route path="/products" element={<AuthGuard><Products /></AuthGuard>} />
-              <Route path="/products/add" element={<AuthGuard><AddProduct /></AuthGuard>} />
-              <Route path="/products/edit/:id" element={<AuthGuard><AddProduct /></AuthGuard>} />
-              <Route path="/products/view/:id" element={<AuthGuard><ViewProduct /></AuthGuard>} />
-              <Route path="/orders" element={<AuthGuard><Orders /></AuthGuard>} />
-              <Route path="/revenue" element={<AuthGuard><Revenue /></AuthGuard>} />
-              <Route path="/reports" element={<AuthGuard><Reports /></AuthGuard>} />
-              <Route path="/users/add" element={<AuthGuard><AddUser /></AuthGuard>} />
-              <Route path="/favorites" element={<AuthGuard><Favorites /></AuthGuard>} />
-              <Route path="/cart" element={<AuthGuard><Cart /></AuthGuard>} />
-              <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/products/add" element={<AddProduct />} />
+              <Route path="/products/edit/:id" element={<AddProduct />} />
+              <Route path="/products/view/:id" element={<ViewProduct />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/revenue" element={<Revenue />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/users/add" element={<AddUser />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="*" element={<NotFound />} />
