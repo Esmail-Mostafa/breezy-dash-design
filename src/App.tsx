@@ -8,7 +8,8 @@ import React from "react";
 import { lazy } from "react";
 import { GridLoader } from "react-spinners";
 import AuthGuard from "./garuds/authGarud";
-
+import { Provider } from "react-redux";
+import { store } from "./services/redex/store";
 const queryClient = new QueryClient();
 const Index = lazy(() => import("./pages/Index"));
 const Analytics = lazy(() => import("./pages/Analytics"));
@@ -28,6 +29,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 
 const App = () => (
+  <Provider store={store}>
   <ThemeProvider defaultTheme="dark" storageKey="dashboard-ui-theme">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -60,6 +62,7 @@ const App = () => (
       </TooltipProvider>
     </QueryClientProvider>
   </ThemeProvider>
+  </Provider>
 );
 
 export default App;
