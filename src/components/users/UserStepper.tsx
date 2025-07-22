@@ -11,61 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Check, ChevronRight, ChevronLeft, User, Shield, Settings, FileText } from "lucide-react";
 
-interface UserFormData {
-  // Step 1: Personal Information
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: string;
-  
-  // Step 2: Account Settings  
-  username: string;
-  password: string;
-  confirmPassword: string;
-  role: string;
-  department: string;
-  
-  // Step 3: Permissions & Access
-  permissions: string[];
-  accessLevel: string;
-  notifications: {
-    email: boolean;
-    sms: boolean;
-    push: boolean;
-  };
-  
-  // Step 4: Additional Information
-  bio: string;
-  location: string;
-  timezone: string;
-  profilePicture: string;
-}
-
-const initialFormData: UserFormData = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  dateOfBirth: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
-  role: "",
-  department: "",
-  permissions: [],
-  accessLevel: "",
-  notifications: {
-    email: false,
-    sms: false,
-    push: false,
-  },
-  bio: "",
-  location: "",
-  timezone: "",
-  profilePicture: "",
-};
-
 const steps = [
   {
     id: 1,
@@ -104,74 +49,9 @@ const timezones = ["UTC-8", "UTC-5", "UTC+0", "UTC+1", "UTC+5:30", "UTC+8"];
 
 export const UserStepper = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<UserFormData>(initialFormData);
-  const [errors, setErrors] = useState<Partial<UserFormData>>({});
-
-  const updateFormData = (field: keyof UserFormData, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
-    }
-  };
-
-  const updateNotification = (type: keyof UserFormData['notifications'], value: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      notifications: {
-        ...prev.notifications,
-        [type]: value
-      }
-    }));
-  };
-
-  const togglePermission = (permission: string) => {
-    setFormData(prev => ({
-      ...prev,
-      permissions: prev.permissions.includes(permission)
-        ? prev.permissions.filter(p => p !== permission)
-        : [...prev.permissions, permission]
-    }));
-  };
-
-  const validateStep = (step: number): boolean => {
-    const newErrors: Partial<UserFormData> = {};
-    
-    switch (step) {
-      case 1:
-        if (!formData.firstName) newErrors.firstName = "First name is required";
-        if (!formData.lastName) newErrors.lastName = "Last name is required";
-        if (!formData.email) newErrors.email = "Email is required";
-        if (!formData.phone) newErrors.phone = "Phone is required";
-        break;
-      case 2:
-        if (!formData.username) newErrors.username = "Username is required";
-        if (!formData.password) newErrors.password = "Password is required";
-        if (formData.password !== formData.confirmPassword) {
-          newErrors.confirmPassword = "Passwords do not match";
-        }
-        if (!formData.role) newErrors.role = "Role is required";
-        break;
-      case 3:
-        if (!formData.accessLevel) newErrors.accessLevel = "Access level is required";
-        break;
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleNext = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 4));
-    }
+    setCurrentStep(prev => Math.min(prev + 1, 4));
   };
 
   const handlePrevious = () => {
@@ -179,13 +59,8 @@ export const UserStepper = () => {
   };
 
   const handleSubmit = () => {
-    if (validateStep(currentStep)) {
-      console.log("User data submitted:", formData);
-      alert("User created successfully!");
-      // Reset form
-      setFormData(initialFormData);
-      setCurrentStep(1);
-    }
+    alert("User created successfully!");
+    setCurrentStep(1);
   };
 
   const getStepContent = () => {
@@ -196,55 +71,25 @@ export const UserStepper = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name *</Label>
-                <Input
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={(e) => updateFormData('firstName', e.target.value)}
-                  className={errors.firstName ? "border-destructive" : ""}
-                />
-                {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
+                <Input id="firstName" placeholder="Enter first name" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName">Last Name *</Label>
-                <Input
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={(e) => updateFormData('lastName', e.target.value)}
-                  className={errors.lastName ? "border-destructive" : ""}
-                />
-                {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
+                <Input id="lastName" placeholder="Enter last name" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email Address *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => updateFormData('email', e.target.value)}
-                className={errors.email ? "border-destructive" : ""}
-              />
-              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+              <Input id="email" type="email" placeholder="Enter email address" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => updateFormData('phone', e.target.value)}
-                  className={errors.phone ? "border-destructive" : ""}
-                />
-                {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+                <Input id="phone" placeholder="Enter phone number" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="dateOfBirth">Date of Birth</Label>
-                <Input
-                  id="dateOfBirth"
-                  type="date"
-                  value={formData.dateOfBirth}
-                  onChange={(e) => updateFormData('dateOfBirth', e.target.value)}
-                />
+                <Input id="dateOfBirth" type="date" />
               </div>
             </div>
           </div>
@@ -255,43 +100,23 @@ export const UserStepper = () => {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username *</Label>
-              <Input
-                id="username"
-                value={formData.username}
-                onChange={(e) => updateFormData('username', e.target.value)}
-                className={errors.username ? "border-destructive" : ""}
-              />
-              {errors.username && <p className="text-sm text-destructive">{errors.username}</p>}
+              <Input id="username" placeholder="Enter username" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="password">Password *</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => updateFormData('password', e.target.value)}
-                  className={errors.password ? "border-destructive" : ""}
-                />
-                {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                <Input id="password" type="password" placeholder="Enter password" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm Password *</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => updateFormData('confirmPassword', e.target.value)}
-                  className={errors.confirmPassword ? "border-destructive" : ""}
-                />
-                {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
+                <Input id="confirmPassword" type="password" placeholder="Confirm password" />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Role *</Label>
-                <Select value={formData.role} onValueChange={(value) => updateFormData('role', value)}>
-                  <SelectTrigger className={errors.role ? "border-destructive" : ""}>
+                <Select>
+                  <SelectTrigger>
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -300,11 +125,10 @@ export const UserStepper = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.role && <p className="text-sm text-destructive">{errors.role}</p>}
               </div>
               <div className="space-y-2">
                 <Label>Department</Label>
-                <Select value={formData.department} onValueChange={(value) => updateFormData('department', value)}>
+                <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select department" />
                   </SelectTrigger>
@@ -324,8 +148,8 @@ export const UserStepper = () => {
           <div className="space-y-6">
             <div className="space-y-2">
               <Label>Access Level *</Label>
-              <Select value={formData.accessLevel} onValueChange={(value) => updateFormData('accessLevel', value)}>
-                <SelectTrigger className={errors.accessLevel ? "border-destructive" : ""}>
+              <Select>
+                <SelectTrigger>
                   <SelectValue placeholder="Select access level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -334,7 +158,6 @@ export const UserStepper = () => {
                   ))}
                 </SelectContent>
               </Select>
-              {errors.accessLevel && <p className="text-sm text-destructive">{errors.accessLevel}</p>}
             </div>
 
             <div className="space-y-3">
@@ -342,49 +165,30 @@ export const UserStepper = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {permissionsList.map((permission) => (
                   <div key={permission} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={permission}
-                      checked={formData.permissions.includes(permission)}
-                      onCheckedChange={() => togglePermission(permission)}
-                    />
+                    <Checkbox id={permission} />
                     <Label htmlFor={permission} className="text-sm">{permission}</Label>
                   </div>
                 ))}
               </div>
-              {formData.permissions.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {formData.permissions.map((permission) => (
-                    <Badge key={permission} variant="secondary">{permission}</Badge>
-                  ))}
-                </div>
-              )}
+              <div className="flex flex-wrap gap-1 mt-2">
+                <Badge variant="secondary">View Users</Badge>
+                <Badge variant="secondary">Create Users</Badge>
+              </div>
             </div>
 
             <div className="space-y-3">
               <Label>Notifications</Label>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="email-notifications"
-                    checked={formData.notifications.email}
-                    onCheckedChange={(checked) => updateNotification('email', checked as boolean)}
-                  />
+                  <Checkbox id="email-notifications" />
                   <Label htmlFor="email-notifications">Email Notifications</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="sms-notifications"
-                    checked={formData.notifications.sms}
-                    onCheckedChange={(checked) => updateNotification('sms', checked as boolean)}
-                  />
+                  <Checkbox id="sms-notifications" />
                   <Label htmlFor="sms-notifications">SMS Notifications</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="push-notifications"
-                    checked={formData.notifications.push}
-                    onCheckedChange={(checked) => updateNotification('push', checked as boolean)}
-                  />
+                  <Checkbox id="push-notifications" />
                   <Label htmlFor="push-notifications">Push Notifications</Label>
                 </div>
               </div>
@@ -399,8 +203,6 @@ export const UserStepper = () => {
               <Label htmlFor="bio">Bio / Description</Label>
               <Textarea
                 id="bio"
-                value={formData.bio}
-                onChange={(e) => updateFormData('bio', e.target.value)}
                 placeholder="Tell us about this user..."
                 className="h-24"
               />
@@ -408,16 +210,11 @@ export const UserStepper = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  value={formData.location}
-                  onChange={(e) => updateFormData('location', e.target.value)}
-                  placeholder="City, Country"
-                />
+                <Input id="location" placeholder="City, Country" />
               </div>
               <div className="space-y-2">
                 <Label>Timezone</Label>
-                <Select value={formData.timezone} onValueChange={(value) => updateFormData('timezone', value)}>
+                <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
@@ -431,12 +228,7 @@ export const UserStepper = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="profilePicture">Profile Picture URL</Label>
-              <Input
-                id="profilePicture"
-                value={formData.profilePicture}
-                onChange={(e) => updateFormData('profilePicture', e.target.value)}
-                placeholder="https://example.com/profile.jpg"
-              />
+              <Input id="profilePicture" placeholder="https://example.com/profile.jpg" />
             </div>
 
             <Separator />
@@ -445,16 +237,16 @@ export const UserStepper = () => {
               <h3 className="font-semibold mb-3">Review User Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
-                  <p><strong>Email:</strong> {formData.email}</p>
-                  <p><strong>Username:</strong> {formData.username}</p>
-                  <p><strong>Role:</strong> {formData.role}</p>
+                  <p><strong>Name:</strong> John Doe</p>
+                  <p><strong>Email:</strong> john.doe@example.com</p>
+                  <p><strong>Username:</strong> johndoe</p>
+                  <p><strong>Role:</strong> Manager</p>
                 </div>
                 <div>
-                  <p><strong>Department:</strong> {formData.department}</p>
-                  <p><strong>Access Level:</strong> {formData.accessLevel}</p>
-                  <p><strong>Permissions:</strong> {formData.permissions.length} selected</p>
-                  <p><strong>Location:</strong> {formData.location || 'Not specified'}</p>
+                  <p><strong>Department:</strong> IT</p>
+                  <p><strong>Access Level:</strong> Standard</p>
+                  <p><strong>Permissions:</strong> 5 selected</p>
+                  <p><strong>Location:</strong> New York, USA</p>
                 </div>
               </div>
             </div>
