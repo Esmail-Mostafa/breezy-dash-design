@@ -1,21 +1,3 @@
-// const initialState = {
-
-//   page1: {
-//     firstName: "",
-//     lastName: "",
-//     email: "",
-//     phone: "",
-//     company: "",
-//   },
-//   page2: {
-//     product: "laptop",
-//     quantity: 1,
-//     requirements: "",
-//   },
-//   page3: {},
-//   page4: [],
-// };
-
 const initialState = [
   {
     page1: {
@@ -48,7 +30,6 @@ export const STEP3 = "STEP3";
 export const STEP4 = "STEP4";
 
 export const orderReducer = (state = initialState, action: any) => {
-
   switch (action.type) {
     case STEP1:
       state[0].page1 = action.payload;
