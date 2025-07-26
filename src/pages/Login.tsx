@@ -44,6 +44,7 @@ const Login = () => {
             Sign in to continue to your dashboard
           </CardDescription>
         </CardHeader>
+     
 
         <CardContent className="space-y-6">
           <Formik
@@ -145,6 +146,7 @@ const Login = () => {
           </div>
         </CardContent>
       </Card>
+
     </div>
   );
 };
