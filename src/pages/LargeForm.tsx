@@ -275,6 +275,175 @@ export default function LargeForm() {
                   </div>
                 </div>
 
+                {/* Dynamic Array - Work Experience */}
+                <div className="space-y-4">
+                  <Label>21. Work Experience</Label>
+                  <div className="space-y-4 border border-border rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="company">Company</Label>
+                        <Input id="company" placeholder="Company name" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="position">Position</Label>
+                        <Input id="position" placeholder="Job title" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="startDate">Start Date</Label>
+                        <Input id="startDate" type="date" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="endDate">End Date</Label>
+                        <Input id="endDate" type="date" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea id="description" placeholder="Describe your role..." />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" size="sm">Remove</Button>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full">+ Add Work Experience</Button>
+                </div>
+
+                {/* Dynamic Array - Education */}
+                <div className="space-y-4">
+                  <Label>22. Education</Label>
+                  <div className="space-y-4 border border-border rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="school">School/University</Label>
+                        <Input id="school" placeholder="Institution name" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="degree">Degree</Label>
+                        <Input id="degree" placeholder="Degree type" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="fieldOfStudy">Field of Study</Label>
+                        <Input id="fieldOfStudy" placeholder="Major/Subject" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="graduationYear">Graduation Year</Label>
+                        <Input id="graduationYear" type="number" placeholder="2023" />
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" size="sm">Remove</Button>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full">+ Add Education</Button>
+                </div>
+
+                {/* Dynamic Array - Languages */}
+                <div className="space-y-4">
+                  <Label>23. Languages</Label>
+                  <div className="space-y-4 border border-border rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="language">Language</Label>
+                        <Input id="language" placeholder="Language name" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Proficiency Level</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select level" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background">
+                            <SelectItem value="beginner">Beginner</SelectItem>
+                            <SelectItem value="intermediate">Intermediate</SelectItem>
+                            <SelectItem value="advanced">Advanced</SelectItem>
+                            <SelectItem value="native">Native</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" size="sm">Remove</Button>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full">+ Add Language</Button>
+                </div>
+
+                {/* Dynamic Array - Certifications */}
+                <div className="space-y-4">
+                  <Label>24. Certifications</Label>
+                  <div className="space-y-4 border border-border rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="certName">Certification Name</Label>
+                        <Input id="certName" placeholder="Certification title" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="issuer">Issuing Organization</Label>
+                        <Input id="issuer" placeholder="Organization name" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="issueDate">Issue Date</Label>
+                        <Input id="issueDate" type="date" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="expiryDate">Expiry Date</Label>
+                        <Input id="expiryDate" type="date" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="credentialId">Credential ID</Label>
+                      <Input id="credentialId" placeholder="Certificate ID" />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" size="sm">Remove</Button>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full">+ Add Certification</Button>
+                </div>
+
+                {/* Dynamic Array - Projects */}
+                <div className="space-y-4">
+                  <Label>25. Projects</Label>
+                  <div className="space-y-4 border border-border rounded-lg p-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="projectName">Project Name</Label>
+                      <Input id="projectName" placeholder="Project title" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="projectDescription">Description</Label>
+                      <Textarea id="projectDescription" placeholder="Describe the project..." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="projectUrl">Project URL</Label>
+                        <Input id="projectUrl" type="url" placeholder="https://project.com" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="projectRepo">Repository URL</Label>
+                        <Input id="projectRepo" type="url" placeholder="https://github.com/user/repo" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Technologies Used</Label>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="secondary">React</Badge>
+                        <Badge variant="secondary">TypeScript</Badge>
+                        <Badge variant="outline">+ Add Tech</Badge>
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" size="sm">Remove</Button>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full">+ Add Project</Button>
+                </div>
+
                 <Separator className="my-6" />
 
                 {/* Submit Buttons */}
