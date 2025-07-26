@@ -26,6 +26,7 @@ const AddUser = lazy(() => import("./pages/adduser"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Settings = lazy(() => import("./pages/Settings"));
+const LargeForm = lazy(() => import("./pages/LargeForm"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 
@@ -55,6 +56,7 @@ const App = () => (
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/form" element={<LargeForm />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="*" element={<NotFound />} />
